@@ -1,0 +1,28 @@
+{
+  "name": "naiveworkflow-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Visualize Claude workflow scripts as swimlane diagrams.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter \"./packages/*\" build",
+    "dev": "pnpm --filter playground dev",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "ci": "biome ci . && pnpm test && pnpm build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.27.11",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
