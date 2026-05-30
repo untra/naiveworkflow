@@ -7,3 +7,5 @@
  */
 
 export * from './ir/index.js';
+export { parseModule, type ParsedModule } from './parse.js';
+export { extractMeta, evalStatic } from './meta.js';
