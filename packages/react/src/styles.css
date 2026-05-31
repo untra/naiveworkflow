@@ -1,0 +1,62 @@
+/*
+ * Optional minimal stylesheet for @naiveworkflow/react.
+ *
+ * Everything is driven by CSS variables with neutral fallbacks, so this sheet
+ * is safe to drop into any design system — override the `--nwf-*` variables (or
+ * skip this file entirely and pass `renderNode`) to match your aesthetic.
+ *
+ * React Flow still needs its own base stylesheet for panning/zoom; import it
+ * alongside this one:  import '@xyflow/react/dist/style.css';
+ */
+
+.nwf-graph {
+  width: 100%;
+  height: 100%;
+}
+
+.nwf-node {
+  --nwf-phase-color: var(--nwf-accent, #64748b);
+  box-sizing: border-box;
+  min-width: 160px;
+  max-width: 230px;
+  padding: 10px 12px;
+  background: var(--nwf-node-bg, #ffffff);
+  color: var(--nwf-node-fg, #18181b);
+  border: 1px solid var(--nwf-node-border, #d4d4d8);
+  border-left: 3px solid var(--nwf-phase-color);
+  border-radius: 8px;
+  font: 13px / 1.35 var(--nwf-font, ui-sans-serif, system-ui, sans-serif);
+}
+
+.nwf-node.nwf-selected {
+  border-color: var(--nwf-phase-color);
+  box-shadow: 0 0 0 2px var(--nwf-phase-color);
+}
+
+.nwf-node-phase {
+  margin-bottom: 3px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--nwf-node-muted, #71717a);
+}
+
+.nwf-node-label {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.nwf-node-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.nwf-node-badge {
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  background: var(--nwf-badge-bg, #f4f4f5);
+  color: var(--nwf-badge-fg, #52525b);
+}

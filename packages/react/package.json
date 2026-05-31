@@ -1,7 +1,7 @@
 {
   "name": "@naiveworkflow/react",
   "version": "0.0.0",
-  "description": "React renderer: lays out naiveworkflow IR with elkjs and draws swimlane diagrams with React Flow.",
+  "description": "React renderer: flattens naiveworkflow IR, lays it out with dagre, and draws a dependency graph with React Flow.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -12,7 +12,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./styles.css": "./dist/styles.css"
   },
   "files": ["dist"],
   "sideEffects": false,
@@ -24,7 +25,7 @@
   },
   "dependencies": {
     "@naiveworkflow/compiler": "workspace:*",
-    "elkjs": "^0.9.3"
+    "dagre": "^0.8.5"
   },
   "peerDependencies": {
     "@xyflow/react": "^12.0.0",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@testing-library/react": "^16.1.0",
+    "@types/dagre": "^0.7.52",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@xyflow/react": "^12.3.6",
