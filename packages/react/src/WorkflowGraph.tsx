@@ -8,7 +8,7 @@
  * flat node/edge list (e.g. their own flatten step).
  */
 
-import type { IRGraph, Meta } from '@naiveworkflow/compiler/ir';
+import type { IRGraph, Meta } from '@untra/naiveworkflow-compiler/ir';
 import {
   Background,
   type Edge,

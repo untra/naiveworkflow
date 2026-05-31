@@ -12,7 +12,7 @@
  * visualizer, MIT © Alex Ryskin) so the two graph models stay interchangeable.
  */
 
-import type { IRGraph, IRNode, Meta, Multiplicity } from '@naiveworkflow/compiler/ir';
+import type { IRGraph, IRNode, Meta, Multiplicity } from '@untra/naiveworkflow-compiler/ir';
 
 export type FlatNodeKind = 'agent' | 'workflow' | 'terminal' | 'note' | 'code';
 

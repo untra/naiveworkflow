@@ -1,5 +1,5 @@
 {
-  "name": "@naiveworkflow/compiler",
+  "name": "@untra/naiveworkflow-compiler",
   "version": "0.0.0",
   "description": "Static compiler: Claude workflow JS → coordinate-free IR JSON. Never executes the source.",
   "license": "MIT",
@@ -20,6 +20,7 @@
     }
   },
   "files": ["dist"],
+  "publishConfig": { "access": "public" },
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
@@ -36,6 +37,6 @@
     "@types/estree": "^1.0.6",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "vitest": "^4.1.7"
   }
 }

@@ -1,4 +1,4 @@
-import type { IRGraph, IRNode, Meta } from '@naiveworkflow/compiler/ir';
+import type { IRGraph, IRNode, Meta } from '@untra/naiveworkflow-compiler/ir';
 import { describe, expect, it } from 'vitest';
 import { flattenIR } from './flatten.js';
 

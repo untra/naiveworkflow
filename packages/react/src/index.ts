@@ -1,5 +1,5 @@
 /**
- * @naiveworkflow/react
+ * @untra/naiveworkflow-react
  *
  * Renders a naiveworkflow IR as a flat, clickable dependency graph: flattens
  * the nested IR (`flattenIR`), lays it out with dagre (`dagreLayout`), and
@@ -7,7 +7,7 @@
  * behavior (`onNodeClick`) and node visuals (`renderNode`) are configurable so
  * the component drops into any embedder's aesthetic.
  *
- * Optional stylesheet: `import '@naiveworkflow/react/styles.css'`
+ * Optional stylesheet: `import '@untra/naiveworkflow-react/styles.css'`
  * (plus React Flow's own `import '@xyflow/react/dist/style.css'`).
  */
 

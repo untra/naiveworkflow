@@ -1,7 +1,7 @@
 import '@xyflow/react/dist/style.css';
-import '@naiveworkflow/react/styles.css';
+import '@untra/naiveworkflow-react/styles.css';
 
-import { type FlatNode, WorkflowGraph } from '@naiveworkflow/react';
+import { type FlatNode, WorkflowGraph } from '@untra/naiveworkflow-react';
 import { useState } from 'react';
 import { graph, meta } from './fixture.js';
 

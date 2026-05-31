@@ -1,6 +1,6 @@
-// @vitest-environment jsdom
-import type { IRGraph, IRNode } from '@naiveworkflow/compiler/ir';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+// @vitest-environment jsdom
+import type { IRGraph, IRNode } from '@untra/naiveworkflow-compiler/ir';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { WorkflowGraph } from './WorkflowGraph.js';
 import type { FlatNode } from './flatten.js';

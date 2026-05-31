@@ -7,10 +7,10 @@ A "Claude workflow" is a JS file that calls graph-building primitives — `agent
 `if`/`return`). `naiveworkflow` reads such a file and shows its structure visually, in two
 phases:
 
-1. **`@naiveworkflow/compiler`** — statically parses the JS into a coordinate-free IR (JSON).
+1. **`@untra/naiveworkflow-compiler`** — statically parses the JS into a coordinate-free IR (JSON).
    The source is parsed with [acorn](https://github.com/acornjs/acorn) and inspected as an AST.
    **It is never executed** — no `eval`, `Function`, `vm`, or dynamic `import`.
-2. **`@naiveworkflow/react`** — lays the IR out with [elkjs](https://github.com/kieler/elkjs)
+2. **`@untra/naiveworkflow-react`** — lays the IR out with [elkjs](https://github.com/kieler/elkjs)
    and renders it with [React Flow](https://reactflow.dev).
 
 ```
@@ -21,8 +21,8 @@ acorn (parse) → visitor (→ IR) → elkjs (layout) → React Flow (render)
 
 | Package | Description |
 |---|---|
-| [`@naiveworkflow/compiler`](packages/compiler) | JS source → IR JSON. Headless, no React. |
-| [`@naiveworkflow/react`](packages/react) | IR → laid-out swimlane diagram. |
+| [`@untra/naiveworkflow-compiler`](packages/compiler) | JS source → IR JSON. Headless, no React. |
+| [`@untra/naiveworkflow-react`](packages/react) | IR → laid-out swimlane diagram. |
 | [`apps/playground`](apps/playground) | Vite dev app: paste JS, see the diagram. (private) |
 
 ## Lane semantics
