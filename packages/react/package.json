@@ -1,6 +1,6 @@
 {
   "name": "@untra/naiveworkflow-react",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "React renderer: flattens naiveworkflow IR, lays it out with dagre, and draws a dependency graph with React Flow.",
   "license": "MIT",
   "type": "module",
