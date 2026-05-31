@@ -30,6 +30,12 @@ export default defineConfig(({ command }) => ({
               find: '@untra/naiveworkflow-compiler/ir',
               replacement: fromHere('../../packages/compiler/src/ir/index.ts'),
             },
+            // Bare entry (where `compile` lives) must follow the /ir entry above,
+            // since a string `find` also matches `name/` subpaths.
+            {
+              find: '@untra/naiveworkflow-compiler',
+              replacement: fromHere('../../packages/compiler/src/index.ts'),
+            },
           ],
         }
       : {}),

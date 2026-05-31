@@ -2,7 +2,7 @@
   "name": "naiveworkflow-monorepo",
   "version": "0.0.0",
   "private": true,
-  "description": "Visualize Claude workflow scripts as swimlane diagrams.",
+  "description": "Visualize Claude workflow scripts as diagramed directed graphs.",
   "license": "MIT",
   "type": "module",
   "packageManager": "pnpm@9.15.4",
@@ -21,7 +21,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
-    "@changesets/cli": "^2.31.0",
     "typescript": "^6.0.3",
     "vite": "^8.0.14",
     "vitest": "^4.1.7"

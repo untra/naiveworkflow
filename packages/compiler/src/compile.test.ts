@@ -54,3 +54,76 @@ describe('compile — log', () => {
     expect(n).toMatchObject({ kind: 'note', text: 'starting run' });
   });
 });
+
+describe('compile — pipeline', () => {
+  it('compiles a pipeline with a symbolic item source and mapped stages', () => {
+    const p = kids(root("await pipeline(sources, (s) => agent('extract'));"))[0];
+    expect(p).toMatchObject({
+      kind: 'pipeline',
+      items: { kind: 'symbolic', sourceText: 'sources' },
+    });
+    expect(p.stages.map((s: IRNode) => s.kind)).toEqual(['agent']);
+    expect(p.stages[0]).toMatchObject({ prompt: 'extract' });
+  });
+
+  it('reports a static multiplicity when the item source is an array literal', () => {
+    const p = kids(root("await pipeline([a, b, c], (s) => agent('go'));"))[0];
+    expect(p).toMatchObject({ kind: 'pipeline', items: { kind: 'static', n: 3 } });
+  });
+});
+
+describe('compile — workflow', () => {
+  it('compiles a workflow call to a workflow node', () => {
+    const w = kids(root("await workflow('sub-flow', x);"))[0];
+    expect(w).toMatchObject({ kind: 'workflow', name: 'sub-flow' });
+  });
+});
+
+describe('compile — branch', () => {
+  it('compiles an if statement to a branch node with a consequent', () => {
+    const b = kids(root("if (ready) { await agent('go'); }"))[0];
+    expect(b).toMatchObject({ kind: 'branch', conditionText: 'ready' });
+    expect(b.consequent.kind).toBe('sequence');
+    expect(kids(b.consequent)[0]).toMatchObject({ kind: 'agent', prompt: 'go' });
+  });
+
+  it('captures the else arm as the alternate', () => {
+    const b = kids(root("if (ok) { await agent('a'); } else { await agent('b'); }"))[0];
+    expect(kids(b.consequent)[0]).toMatchObject({ prompt: 'a' });
+    expect(kids(b.alternate)[0]).toMatchObject({ prompt: 'b' });
+  });
+});
+
+describe('compile — loop', () => {
+  it('compiles a while loop to a loop node', () => {
+    const l = kids(root("while (more) { await agent('again'); }"))[0];
+    expect(l).toMatchObject({ kind: 'loop', repeat: { kind: 'while', conditionText: 'more' } });
+    expect(kids(l.body)[0]).toMatchObject({ kind: 'agent', prompt: 'again' });
+  });
+
+  it('compiles a for loop to a loop node with kind "for"', () => {
+    const l = kids(root("for (let i = 0; i < n; i++) { await agent('x'); }"))[0];
+    expect(l).toMatchObject({ kind: 'loop', repeat: { kind: 'for' } });
+  });
+});
+
+describe('compile — terminal', () => {
+  it('compiles a return statement to a terminal node', () => {
+    const t = kids(root('return result;'))[0];
+    expect(t).toMatchObject({ kind: 'terminal', reason: 'return' });
+  });
+});
+
+describe('compile — plumbing & fallback', () => {
+  it('silently drops non-workflow variable/expression statements (data plumbing)', () => {
+    const result = compile("const total = a + b * c; helper(); await agent('go');");
+    expect(kids(result.graph.root).map((n: IRNode) => n.kind)).toEqual(['agent']);
+    expect(result.diagnostics).toHaveLength(0);
+  });
+
+  it('emits a code node and a diagnostic for an unhandled statement type', () => {
+    const result = compile('throw boom;');
+    expect(kids(result.graph.root)[0]).toMatchObject({ kind: 'code' });
+    expect(result.diagnostics.length).toBeGreaterThan(0);
+  });
+});

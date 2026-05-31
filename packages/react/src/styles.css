@@ -1,62 +1,204 @@
 /*
- * Optional minimal stylesheet for @naiveworkflow/react.
+ * Optional stylesheet for @untra/naiveworkflow-react.
  *
- * Everything is driven by CSS variables with neutral fallbacks, so this sheet
- * is safe to drop into any design system — override the `--nwf-*` variables (or
- * skip this file entirely and pass `renderNode`) to match your aesthetic.
+ * Slim by design. Everything is driven by `--nwf-*` CSS variables, so this sheet
+ * drops into any design system: override the variables, switch the bundled
+ * `light`/`dark` presets via the `theme` prop, or skip this file entirely and
+ * pass `renderNode` for a fully custom look.
+ *
+ * The dark preset is ported from the claude-workflow-visualizer dev-tool
+ * aesthetic (MIT © Alex Ryskin) — solid phase-color pill chips, monospace
+ * labels, a left-border accent, and a soft selected glow.
  *
  * React Flow still needs its own base stylesheet for panning/zoom; import it
  * alongside this one:  import '@xyflow/react/dist/style.css';
  */
 
+/* ─── Tokens: light preset (the base) ─────────────────────────────────────── */
 .nwf-graph {
+  --nwf-accent: #6ea8fe;
+  --nwf-node-bg: #ffffff;
+  --nwf-node-fg: #18181b;
+  --nwf-node-border: #d4d4d8;
+  --nwf-node-muted: #71717a;
+  --nwf-badge-bg: #f4f4f5;
+  --nwf-badge-fg: #52525b;
+  /* Text drawn on the solid phase-color pill. Dark reads well on the bright,
+     saturated phase palette in either theme. */
+  --nwf-chip-fg: #0a0c11;
+  --nwf-canvas-bg: #ffffff;
+  --nwf-edge: #c4c4cc;
+  --nwf-edge-active: var(--nwf-accent);
+  --nwf-ok: #16a34a;
+  --nwf-workflow: #c98bdb;
+  --nwf-radius: 8px;
+  --nwf-font: ui-sans-serif, system-ui, sans-serif;
+  --nwf-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  --nwf-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+
   width: 100%;
   height: 100%;
 }
 
-.nwf-node {
-  --nwf-phase-color: var(--nwf-accent, #64748b);
-  box-sizing: border-box;
-  min-width: 160px;
-  max-width: 230px;
-  padding: 10px 12px;
-  background: var(--nwf-node-bg, #ffffff);
-  color: var(--nwf-node-fg, #18181b);
-  border: 1px solid var(--nwf-node-border, #d4d4d8);
-  border-left: 3px solid var(--nwf-phase-color);
-  border-radius: 8px;
-  font: 13px / 1.35 var(--nwf-font, ui-sans-serif, system-ui, sans-serif);
+/* ─── Tokens: dark preset ─────────────────────────────────────────────────── */
+.nwf-graph.nwf-theme-dark {
+  --nwf-accent: #6ea8fe;
+  --nwf-node-bg: #181b27;
+  --nwf-node-fg: #e6e9f2;
+  --nwf-node-border: #343b50;
+  --nwf-node-muted: #9aa3b8;
+  --nwf-badge-bg: #0c0e14;
+  --nwf-badge-fg: #9aa3b8;
+  --nwf-chip-fg: #0a0c11;
+  --nwf-canvas-bg: #0a0c11;
+  --nwf-edge: #343b50;
+  --nwf-edge-active: #6ea8fe;
+  --nwf-ok: #5fd0a8;
+  --nwf-workflow: #c98bdb;
+  --nwf-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.nwf-node.nwf-selected {
-  border-color: var(--nwf-phase-color);
-  box-shadow: 0 0 0 2px var(--nwf-phase-color);
+/* ─── Node ────────────────────────────────────────────────────────────────── */
+.nwf-node {
+  --nwf-phase-color: var(--nwf-accent);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 160px;
+  max-width: 230px;
+  padding: 11px 13px;
+  background: var(--nwf-node-bg);
+  color: var(--nwf-node-fg);
+  border: 1px solid var(--nwf-node-border);
+  border-left: 3px solid var(--nwf-phase-color);
+  border-radius: var(--nwf-radius);
+  box-shadow: var(--nwf-shadow);
+  font-family: var(--nwf-font);
+  transition: opacity 300ms ease, transform 300ms ease, box-shadow 300ms ease,
+    border-color 300ms ease;
+}
+
+/* Vertical layout: move the phase accent from the leading (left) edge to the
+   top, while keeping it driven by --nwf-phase-color so theme overrides still
+   apply. Override this rule (or the variable) to re-skin. */
+.nwf-graph.nwf-vertical .nwf-node {
+  border-left: 1px solid var(--nwf-node-border);
+  border-top: 3px solid var(--nwf-phase-color);
 }
 
 .nwf-node-phase {
-  margin-bottom: 3px;
-  font-size: 10px;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--nwf-phase-color);
+  color: var(--nwf-chip-fg);
+  font-size: 9.5px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--nwf-node-muted, #71717a);
+  letter-spacing: 0.5px;
 }
 
 .nwf-node-label {
-  font-weight: 500;
+  font-family: var(--nwf-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
   overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .nwf-node-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  margin-top: 6px;
 }
 
 .nwf-node-badge {
-  padding: 1px 6px;
-  border-radius: 999px;
-  font-size: 10px;
-  background: var(--nwf-badge-bg, #f4f4f5);
-  color: var(--nwf-badge-fg, #52525b);
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--nwf-badge-bg);
+  color: var(--nwf-badge-fg);
+  border: 1px solid var(--nwf-node-border);
+  font-family: var(--nwf-font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ─── Kind variants ───────────────────────────────────────────────────────── */
+/* `workflow` (a nested sub-workflow) gets a distinct accent — the nearest
+   analog to the visualizer's "synthesis" node. */
+.nwf-node.nwf-kind-workflow {
+  --nwf-phase-color: var(--nwf-workflow);
+}
+
+/* ─── Selection ───────────────────────────────────────────────────────────── */
+.nwf-node.nwf-selected {
+  border-color: var(--nwf-phase-color);
+  box-shadow: 0 0 0 2px var(--nwf-phase-color),
+    0 0 24px color-mix(in srgb, var(--nwf-phase-color) 45%, transparent);
+}
+
+/* ─── Optional consumer-driven states (no built-in simulation) ────────────────
+   Drive these by passing a `nodeState` map; the component only applies classes. */
+.nwf-node.nwf-idle {
+  opacity: 0.66;
+  filter: saturate(0.85);
+}
+
+.nwf-node.nwf-running {
+  opacity: 1;
+  border-color: var(--nwf-phase-color);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--nwf-phase-color) 55%, transparent),
+    0 0 22px color-mix(in srgb, var(--nwf-phase-color) 45%, transparent);
+  animation: nwf-pulse 1.3s ease-in-out infinite;
+}
+
+@keyframes nwf-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--nwf-phase-color) 55%, transparent),
+      0 0 16px color-mix(in srgb, var(--nwf-phase-color) 35%, transparent);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--nwf-phase-color) 70%, transparent),
+      0 0 30px color-mix(in srgb, var(--nwf-phase-color) 60%, transparent);
+    transform: scale(1.018);
+  }
+}
+
+.nwf-node.nwf-done {
+  opacity: 1;
+  border-left-color: var(--nwf-ok);
+}
+
+/* ─── React Flow surface theming ──────────────────────────────────────────── */
+.nwf-graph .react-flow,
+.nwf-graph .react-flow__background {
+  background: var(--nwf-canvas-bg);
+}
+
+.nwf-graph .react-flow__edge-path {
+  stroke: var(--nwf-edge);
+  stroke-width: 1.5;
+}
+
+.nwf-graph .react-flow__edge.selected .react-flow__edge-path,
+.nwf-graph .react-flow__edge:hover .react-flow__edge-path {
+  stroke: var(--nwf-edge-active);
+}
+
+.nwf-graph .react-flow__handle {
+  width: 7px;
+  height: 7px;
+  background: var(--nwf-edge);
+  border: 1px solid var(--nwf-canvas-bg);
 }

@@ -1,6 +1,6 @@
 # naiveworkflow
 
-Visualize **Claude workflow scripts** as swimlane diagrams with a minimal aesthetic.
+Visualize **Claude workflow JS scripts** as directed graphs with a minimal aesthetic.
 
 A "Claude workflow" is a JS file that calls graph-building primitives — `agent()`,
 `parallel()`, `pipeline()`, `phase()` — interleaved with real control flow (`while`, `.map`,
@@ -22,7 +22,7 @@ acorn (parse) → visitor (→ IR) → elkjs (layout) → React Flow (render)
 | Package | Description |
 |---|---|
 | [`@untra/naiveworkflow-compiler`](packages/compiler) | JS source → IR JSON. Headless, no React. |
-| [`@untra/naiveworkflow-react`](packages/react) | IR → laid-out swimlane diagram. |
+| [`@untra/naiveworkflow-react`](packages/react) | IR → laid-out directed graph diagram. |
 | [`apps/playground`](apps/playground) | Vite dev app: paste JS, see the diagram. (private) |
 
 ## Lane semantics
