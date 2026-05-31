@@ -1,6 +1,6 @@
 {
   "name": "naiveworkflow-monorepo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "description": "Visualize Claude workflow scripts as diagramed directed graphs.",
   "license": "MIT",

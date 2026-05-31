@@ -1,6 +1,6 @@
 {
   "name": "@untra/naiveworkflow-compiler",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Static compiler: Claude workflow JS → coordinate-free IR JSON. Never executes the source.",
   "license": "MIT",
   "type": "module",
