@@ -7,6 +7,16 @@
 /** Bumped when the IR shape changes incompatibly. */
 export const IR_SCHEMA_VERSION = 1 as const;
 
+export { irJsonSchema } from './json-schema.js';
+
+export {
+  irGraphSchema,
+  irNodeSchema,
+  metaSchema,
+  multiplicitySchema,
+  phaseSchema,
+  repeatSchema,
+} from './schema.js';
 export type {
   AgentNode,
   BranchNode,
@@ -29,14 +39,3 @@ export type {
   TerminalNode,
   WorkflowNode,
 } from './types.js';
-
-export {
-  irGraphSchema,
-  irNodeSchema,
-  metaSchema,
-  multiplicitySchema,
-  phaseSchema,
-  repeatSchema,
-} from './schema.js';
-
-export { irJsonSchema } from './json-schema.js';

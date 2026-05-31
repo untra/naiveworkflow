@@ -10,7 +10,8 @@ export interface Example {
   source: string;
 }
 
-export const examples: Example[] = [
+// Non-empty tuple so `examples[0]` is always defined under noUncheckedIndexedAccess.
+export const examples: [Example, ...Example[]] = [
   { id: 'deep-research', name: 'Deep research', source: deepResearch },
   { id: 'review-changes', name: 'Review changes', source: reviewChanges },
   { id: 'loop-until-dry', name: 'Loop until dry', source: loopUntilDry },

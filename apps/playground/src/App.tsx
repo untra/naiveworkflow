@@ -76,10 +76,10 @@ function ToolbarButton({
 }
 
 export function App() {
-  const [exampleId, setExampleId] = useState(examples[0]!.id);
+  const [exampleId, setExampleId] = useState(examples[0].id);
   const [selected, setSelected] = useState<FlatNode | null>(null);
 
-  const example = examples.find((e) => e.id === exampleId) ?? examples[0]!;
+  const example = examples.find((e) => e.id === exampleId) ?? examples[0];
   const { meta, graph, diagnostics } = useMemo(() => compile(example.source), [example.source]);
 
   // Clear the inspector when switching examples — node ids don't carry across.
@@ -89,7 +89,15 @@ export function App() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', fontFamily: sans, color: '#e6e9f2' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        fontFamily: sans,
+        color: '#e6e9f2',
+      }}
+    >
       <header
         style={{
           display: 'flex',

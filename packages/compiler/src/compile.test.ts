@@ -26,6 +26,7 @@ describe('compile — agent', () => {
   });
 
   it('sets prompt to null when the prompt is a dynamic template', () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: the `${x}` is the dynamic-template input under test, not a real interpolation.
     const a = kids(root('await agent(`do ${x}`);'))[0];
     expect(a).toMatchObject({ kind: 'agent', prompt: null });
   });

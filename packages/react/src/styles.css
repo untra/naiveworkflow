@@ -33,7 +33,7 @@
   --nwf-workflow: #c98bdb;
   --nwf-radius: 8px;
   --nwf-font: ui-sans-serif, system-ui, sans-serif;
-  --nwf-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  --nwf-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
   --nwf-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 
   width: 100%;
@@ -75,7 +75,10 @@
   border-radius: var(--nwf-radius);
   box-shadow: var(--nwf-shadow);
   font-family: var(--nwf-font);
-  transition: opacity 300ms ease, transform 300ms ease, box-shadow 300ms ease,
+  transition:
+    opacity 300ms ease,
+    transform 300ms ease,
+    box-shadow 300ms ease,
     border-color 300ms ease;
 }
 
@@ -142,7 +145,8 @@
 /* ─── Selection ───────────────────────────────────────────────────────────── */
 .nwf-node.nwf-selected {
   border-color: var(--nwf-phase-color);
-  box-shadow: 0 0 0 2px var(--nwf-phase-color),
+  box-shadow:
+    0 0 0 2px var(--nwf-phase-color),
     0 0 24px color-mix(in srgb, var(--nwf-phase-color) 45%, transparent);
 }
 
@@ -156,7 +160,8 @@
 .nwf-node.nwf-running {
   opacity: 1;
   border-color: var(--nwf-phase-color);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--nwf-phase-color) 55%, transparent),
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--nwf-phase-color) 55%, transparent),
     0 0 22px color-mix(in srgb, var(--nwf-phase-color) 45%, transparent);
   animation: nwf-pulse 1.3s ease-in-out infinite;
 }
@@ -164,12 +169,14 @@
 @keyframes nwf-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--nwf-phase-color) 55%, transparent),
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--nwf-phase-color) 55%, transparent),
       0 0 16px color-mix(in srgb, var(--nwf-phase-color) 35%, transparent);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--nwf-phase-color) 70%, transparent),
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--nwf-phase-color) 70%, transparent),
       0 0 30px color-mix(in srgb, var(--nwf-phase-color) 60%, transparent);
     transform: scale(1.018);
   }

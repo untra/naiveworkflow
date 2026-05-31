@@ -89,7 +89,11 @@ export function compile(source: string): CompileResult {
   const ctx: Ctx = { source, sink: new DiagnosticSink() };
 
   /** Walk an ordered statement list into IR children, tracking `phase()` tags. */
-  function walkStatements(stmts: Stmt[], pathPrefix: string, inherited: string | undefined): IRNode[] {
+  function walkStatements(
+    stmts: Stmt[],
+    pathPrefix: string,
+    inherited: string | undefined,
+  ): IRNode[] {
     let phase = inherited;
     const out: IRNode[] = [];
     let i = 0;
@@ -251,10 +255,7 @@ export function compile(source: string): CompileResult {
       const child = classifyElement(arg, `${path}/pipeline/${i}`, phase);
       if (child) stages.push(child);
     });
-    return tag(
-      { id: path, kind: 'pipeline', items: multiplicityOf(args[0], ctx), stages },
-      phase,
-    );
+    return tag({ id: path, kind: 'pipeline', items: multiplicityOf(args[0], ctx), stages }, phase);
   }
 
   function workflowNode(
@@ -292,10 +293,7 @@ export function compile(source: string): CompileResult {
 }
 
 /** A readable one-line label for a `for`/`for..of`/`for..in` header. */
-function forHeader(
-  stmt: ForStatement | ForOfStatement | ForInStatement,
-  source: string,
-): string {
+function forHeader(stmt: ForStatement | ForOfStatement | ForInStatement, source: string): string {
   if (stmt.type === 'ForStatement') return stmt.test ? conditionText(stmt.test, source) : '';
   const keyword = stmt.type === 'ForOfStatement' ? 'of' : 'in';
   return `${conditionText(stmt.left, source)} ${keyword} ${conditionText(stmt.right, source)}`;

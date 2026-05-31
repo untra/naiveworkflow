@@ -18,20 +18,20 @@
 
 export const RENDERER_VERSION = '0.1.0';
 
-export {
-  WorkflowGraph,
-  WorkflowFlow,
-  type WorkflowGraphProps,
-  type WorkflowFlowProps,
-  type Theme,
-} from './WorkflowGraph.js';
 export { DefaultNodeBody, type DefaultNodeBodyProps, type NodeState } from './DefaultNode.js';
 export {
-  flattenIR,
+  type FlatEdge,
+  type FlatEdgeKind,
   type FlatGraph,
   type FlatNode,
-  type FlatEdge,
   type FlatNodeKind,
-  type FlatEdgeKind,
+  flattenIR,
 } from './flatten.js';
 export { dagreLayout, type LayoutOptions, type Position } from './layout.js';
+export {
+  type Theme,
+  WorkflowFlow,
+  type WorkflowFlowProps,
+  WorkflowGraph,
+  type WorkflowGraphProps,
+} from './WorkflowGraph.js';

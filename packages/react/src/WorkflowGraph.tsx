@@ -33,7 +33,7 @@ import {
 } from 'react';
 import { DefaultNodeBody, type NodeState } from './DefaultNode.js';
 import { type FlatEdge, type FlatNode, flattenIR } from './flatten.js';
-import { type LayoutOptions, dagreLayout } from './layout.js';
+import { dagreLayout, type LayoutOptions } from './layout.js';
 
 /** Neutral default phase palette. Override via `phaseColors`. */
 const DEFAULT_PALETTE = [

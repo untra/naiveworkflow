@@ -18,7 +18,14 @@ export function someDescendant(node: Node, pred: (n: Node) => boolean): boolean 
   return false;
 }
 
-export const PRIMITIVE_NAMES = new Set(['agent', 'parallel', 'pipeline', 'phase', 'log', 'workflow']);
+export const PRIMITIVE_NAMES = new Set([
+  'agent',
+  'parallel',
+  'pipeline',
+  'phase',
+  'log',
+  'workflow',
+]);
 
 /** Whether an expression (transitively) calls a workflow primitive by name. */
 export function containsPrimitive(node: Node): boolean {
