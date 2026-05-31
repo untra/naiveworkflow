@@ -6,7 +6,8 @@
  * NEVER executed (no eval/Function/vm/dynamic import).
  */
 
-export * from './ir/index.js';
-export { parseModule, type ParsedModule } from './parse.js';
-export { extractMeta } from './meta.js';
+export { compile } from './compile.js';
 export { evalStatic } from './eval.js';
+export * from './ir/index.js';
+export { extractMeta } from './meta.js';
+export { type ParsedModule, parseModule } from './parse.js';

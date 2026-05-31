@@ -17,6 +17,9 @@ export function parseModule(source: string): ParsedModule {
   const program = parse(source, {
     ecmaVersion: 'latest',
     sourceType: 'module',
+    // Workflow scripts run inside an async wrapper, so a top-level `return`
+    // (e.g. `return { confirmed }`) is idiomatic — allow it outside a function.
+    allowReturnOutsideFunction: true,
     ranges: true,
     locations: true,
   }) as unknown as Program;

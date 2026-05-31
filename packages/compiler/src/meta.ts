@@ -7,7 +7,7 @@ function findMetaObject(program: Program): ObjectExpression | null {
   for (const stmt of program.body) {
     if (stmt.type !== 'ExportNamedDeclaration') continue;
     const decl = stmt.declaration;
-    if (!decl || decl.type !== 'VariableDeclaration') continue;
+    if (decl?.type !== 'VariableDeclaration') continue;
     for (const d of decl.declarations) {
       if (
         d.id.type === 'Identifier' &&
@@ -22,7 +22,7 @@ function findMetaObject(program: Program): ObjectExpression | null {
 }
 
 function extractPhases(node: Expression | undefined): Phase[] {
-  if (!node || node.type !== 'ArrayExpression') return [];
+  if (node?.type !== 'ArrayExpression') return [];
   const phases: Phase[] = [];
   for (const el of node.elements) {
     if (el === null || el.type === 'SpreadElement') continue;

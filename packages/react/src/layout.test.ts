@@ -28,6 +28,16 @@ describe('dagreLayout', () => {
     expect(b.x).toBeLessThan(c.x);
   });
 
+  it('lays a chain out top-to-bottom (y increases along edges) with direction TB', () => {
+    const pos = dagreLayout([node('a'), node('b'), node('c')], [edge('a', 'b'), edge('b', 'c')], {
+      direction: 'TB',
+    });
+    const { a, b, c } = pos;
+    if (!a || !b || !c) throw new Error('expected positions for a, b, c');
+    expect(a.y).toBeLessThan(b.y);
+    expect(b.y).toBeLessThan(c.y);
+  });
+
   it('handles an empty graph', () => {
     expect(dagreLayout([], [])).toEqual({});
   });

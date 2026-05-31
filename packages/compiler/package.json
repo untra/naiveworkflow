@@ -1,6 +1,6 @@
 {
   "name": "@untra/naiveworkflow-compiler",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "Static compiler: Claude workflow JS → coordinate-free IR JSON. Never executes the source.",
   "license": "MIT",
   "type": "module",
@@ -19,8 +19,12 @@
       "require": "./dist/ir.cjs"
     }
   },
-  "files": ["dist"],
-  "publishConfig": { "access": "public" },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": false,
   "scripts": {
     "build": "tsup",

@@ -1,0 +1,66 @@
+name: Version bump
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: version-bump
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    # Only run when the PR was actually merged, not just closed.
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          # Default GITHUB_TOKEN; with contents: write it can push to an
+          # unprotected main. If main becomes protected, swap this for a PAT
+          # or GitHub App token secret that can bypass branch protection.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Compute and apply next patch version
+        id: bump
+        run: |
+          set -euo pipefail
+          CURRENT="$(cat VERSION)"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          NEXT="${MAJOR}.${MINOR}.$((PATCH + 1))"
+          echo "Bumping ${CURRENT} -> ${NEXT}"
+
+          # VERSION is the source of truth; keep all package.json files in lockstep.
+          echo "$NEXT" > VERSION
+          npm pkg set version="$NEXT"
+          (cd packages/compiler && npm pkg set version="$NEXT")
+          (cd packages/react && npm pkg set version="$NEXT")
+
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add VERSION package.json packages/compiler/package.json packages/react/package.json
+          if git diff --cached --quiet; then
+            echo "No version changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(release): bump version to ${{ steps.bump.outputs.next }}"
+          # Guard against a racing merge that pushed to main in the meantime.
+          git pull --rebase origin main
+          git push origin main

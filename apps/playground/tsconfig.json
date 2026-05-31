@@ -4,10 +4,10 @@
     "noEmit": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
-    "baseUrl": ".",
     "paths": {
       "@untra/naiveworkflow-react": ["../../packages/react/src/index.ts"],
-      "@untra/naiveworkflow-compiler/ir": ["../../packages/compiler/src/ir/index.ts"]
+      "@untra/naiveworkflow-compiler/ir": ["../../packages/compiler/src/ir/index.ts"],
+      "@untra/naiveworkflow-compiler": ["../../packages/compiler/src/index.ts"]
     }
   },
   "include": ["src", "vite.config.ts"]
