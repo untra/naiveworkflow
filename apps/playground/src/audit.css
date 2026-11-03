@@ -1,0 +1,38 @@
+.audit {
+  color: #18181b;
+  background: #fff;
+  min-height: 100vh;
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+}
+.audit[data-theme="dark"] {
+  color: #e6e9f2;
+  background: #0a0c11;
+}
+.audit h1 {
+  font-size: 1.25rem;
+}
+.audit-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.audit-toolbar label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.audit button,
+.audit select {
+  min-height: 28px;
+}
+.audit-graph {
+  height: 650px;
+  min-width: 0;
+}
+body {
+  margin: 0;
+}

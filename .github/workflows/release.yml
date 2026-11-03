@@ -7,32 +7,47 @@ permissions:
   contents: read
   id-token: write
 
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
 jobs:
   release:
+    if: github.ref == 'refs/heads/main'
     name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'pnpm'
+          node-version: 22
+          registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Check source and dependencies
+        run: pnpm lint && pnpm typecheck && pnpm audit --audit-level low
 
       - name: Build packages
         run: pnpm -r --filter "./packages/*" build
 
       - name: Run tests
         run: pnpm test
+
+      - name: Browser regression tests
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          pnpm test:browser
 
       - name: Publish to npm
         run: pnpm -r --filter "./packages/*" publish --no-git-checks --provenance

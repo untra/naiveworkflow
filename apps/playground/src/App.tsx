@@ -1,5 +1,6 @@
 import '@xyflow/react/dist/style.css';
 import '@untra/naiveworkflow-react/styles.css';
+import './playground.css';
 
 import { compile } from '@untra/naiveworkflow-compiler';
 import { type FlatNode, WorkflowGraph } from '@untra/naiveworkflow-react';
@@ -102,13 +103,17 @@ export function App() {
         style={{
           display: 'flex',
           alignItems: 'center',
+          flexWrap: 'wrap',
           gap: 8,
           padding: '10px 14px',
           borderBottom: '1px solid #262b3a',
           background: '#0d0f16',
         }}
       >
-        <span style={{ fontSize: 12, color: '#626a80', marginRight: 4 }}>workflow .js →</span>
+        <span style={{ fontSize: 12, color: '#9aa3b8', marginRight: 4 }}>workflow .js →</span>
+        <a href="./audit.html" style={{ color: '#9fc4ff' }}>
+          Accessibility examples
+        </a>
         {examples.map((e) => (
           <ToolbarButton
             key={e.id}
@@ -119,7 +124,7 @@ export function App() {
         ))}
       </header>
 
-      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+      <div className="playground-layout">
         <div style={{ flex: 1, minWidth: 0 }}>
           <WorkflowGraph
             graph={graph}
@@ -131,8 +136,8 @@ export function App() {
           />
         </div>
         <aside
+          className="playground-inspector"
           style={{
-            width: 340,
             borderLeft: '1px solid #262b3a',
             padding: 20,
             overflow: 'auto',
@@ -170,7 +175,7 @@ export function App() {
           {selected ? (
             <Inspector node={selected} />
           ) : (
-            <p style={{ color: '#626a80', fontSize: 13 }}>Click a node to inspect it.</p>
+            <p style={{ color: '#9aa3b8', fontSize: 13 }}>Click a node to inspect it.</p>
           )}
         </aside>
       </div>

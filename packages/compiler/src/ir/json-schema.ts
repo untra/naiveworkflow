@@ -1,4 +1,4 @@
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import { z } from 'zod';
 import { irGraphSchema } from './schema.js';
 
 /**
@@ -6,5 +6,5 @@ import { irGraphSchema } from './schema.js';
  * validation, and non-JS consumers of the IR JSON.
  */
 export function irJsonSchema(): object {
-  return zodToJsonSchema(irGraphSchema, { name: 'NaiveWorkflowIR', $refStrategy: 'root' });
+  return z.toJSONSchema(irGraphSchema, { target: 'draft-07', io: 'input' });
 }

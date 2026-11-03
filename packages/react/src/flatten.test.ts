@@ -15,6 +15,12 @@ const hasEdge = (
 ) => edges.some((e) => e.source === source && e.target === target && (!kind || e.kind === kind));
 
 describe('flattenIR — leaves', () => {
+  it('preserves the complete label for text equivalents while truncating display labels', () => {
+    const label = 'A detailed workflow label. '.repeat(10);
+    const { nodes } = flattenIR(graph(agent('a', { label })));
+    expect(nodes[0]?.fullLabel).toBe(label);
+    expect(nodes[0]?.label.length).toBe(80);
+  });
   it('flattens a single agent to one node with no edges', () => {
     const { nodes, edges } = flattenIR(
       graph(agent('a', { label: 'scan', model: 'opus', hasSchema: true })),

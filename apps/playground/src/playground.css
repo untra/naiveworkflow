@@ -1,0 +1,18 @@
+.playground-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 340px);
+  flex: 1;
+  min-height: 0;
+}
+
+.playground-inspector {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .playground-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(400px, 60vh) auto;
+  }
+}

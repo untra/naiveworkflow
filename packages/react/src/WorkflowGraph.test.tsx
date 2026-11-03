@@ -49,6 +49,34 @@ const fixture: IRGraph = {
 };
 
 describe('WorkflowGraph', () => {
+  it('blocks node callbacks while read-only and restores them when interactive', () => {
+    const onNodeClick = vi.fn();
+    const onNodeDoubleClick = vi.fn();
+    const { rerender } = render(
+      <WorkflowGraph
+        graph={fixture}
+        readOnly
+        onNodeClick={onNodeClick}
+        onNodeDoubleClick={onNodeDoubleClick}
+      />,
+    );
+    fireEvent.click(screen.getByTestId('rf__node-a'));
+    fireEvent.doubleClick(screen.getByTestId('rf__node-a'));
+    expect(onNodeClick).not.toHaveBeenCalled();
+    expect(onNodeDoubleClick).not.toHaveBeenCalled();
+    rerender(
+      <WorkflowGraph
+        graph={fixture}
+        onNodeClick={onNodeClick}
+        onNodeDoubleClick={onNodeDoubleClick}
+      />,
+    );
+    fireEvent.click(screen.getByText('find sources'));
+    fireEvent.doubleClick(screen.getByText('find sources'));
+    expect(onNodeClick).toHaveBeenCalledTimes(1);
+    expect(onNodeDoubleClick).toHaveBeenCalledTimes(1);
+  });
+
   it('renders a node for each leaf in the IR', () => {
     render(<WorkflowGraph graph={fixture} />);
     expect(screen.getByText('find sources')).toBeDefined();
