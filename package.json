@@ -17,7 +17,7 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "biome check .",
     "format": "biome format --write .",
-    "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:browser && pnpm audit",
+    "ci": "pnpm biome ci . && pnpm -r build && pnpm typecheck && pnpm test && pnpm test:browser && pnpm audit",
     "test:browser": "playwright test",
     "audit": "pnpm audit --audit-level low"
   },

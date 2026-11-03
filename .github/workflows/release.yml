@@ -36,10 +36,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Check source and dependencies
-        run: pnpm lint && pnpm typecheck && pnpm audit --audit-level low
+        run: pnpm lint && pnpm audit --audit-level low
 
       - name: Build packages
         run: pnpm -r --filter "./packages/*" build
+
+      - name: Typecheck
+        run: pnpm typecheck
 
       - name: Run tests
         run: pnpm test
