@@ -28,12 +28,17 @@ import {
   type MouseEvent,
   type ReactNode,
   useCallback,
+  useEffect,
+  useId,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { DefaultNodeBody, type NodeState } from './DefaultNode.js';
 import { type FlatEdge, type FlatNode, flattenIR } from './flatten.js';
 import { dagreLayout, type LayoutOptions } from './layout.js';
+import { MAX_ZOOM, MIN_ZOOM, ViewportControls } from './ViewportControls.js';
+import { WorkflowDetails } from './WorkflowDetails.js';
 
 /** Neutral default phase palette. Override via `phaseColors`. */
 const DEFAULT_PALETTE = [
@@ -50,6 +55,8 @@ const DEFAULT_PALETTE = [
 export type Theme = 'light' | 'dark';
 
 interface CommonProps {
+  /** Disable graph editing and node callbacks; external selectedId highlighting remains. */
+  readOnly?: boolean;
   /** Controlled selection. Omit to let the component manage selection itself. */
   selectedId?: string | null;
   onNodeClick?: (node: FlatNode, event: MouseEvent) => void;
@@ -92,19 +99,35 @@ interface NodeData extends Record<string, unknown> {
   vertical?: boolean;
 }
 
+type WorkflowNode = Node<NodeData, 'nwf'>;
+
 /** The single registered node type: provides handles, delegates the body. */
-function NodeView(props: NodeProps) {
-  const { flat, color, state, renderNode, vertical } = props.data as NodeData;
+function NodeView(props: NodeProps<WorkflowNode>) {
+  const { flat, color, state, renderNode, vertical } = props.data;
   const selected = props.selected ?? false;
   return (
     <>
-      <Handle type="target" position={vertical ? Position.Top : Position.Left} />
+      <Handle
+        type="target"
+        position={vertical ? Position.Top : Position.Left}
+        isConnectable={props.isConnectable}
+        isConnectableStart={props.isConnectable}
+        isConnectableEnd={props.isConnectable}
+        aria-hidden="true"
+      />
       {renderNode ? (
-        renderNode(flat, { selected })
+        <div className="nwf-custom-node">{renderNode(flat, { selected })}</div>
       ) : (
         <DefaultNodeBody flat={flat} selected={selected} color={color} state={state} />
       )}
-      <Handle type="source" position={vertical ? Position.Bottom : Position.Right} />
+      <Handle
+        type="source"
+        position={vertical ? Position.Bottom : Position.Right}
+        isConnectable={props.isConnectable}
+        isConnectableStart={props.isConnectable}
+        isConnectableEnd={props.isConnectable}
+        aria-hidden="true"
+      />
     </>
   );
 }
@@ -115,6 +138,7 @@ const defaultEdgeStyle = (kind: FlatEdge['kind']): CSSProperties | undefined =>
 function WorkflowFlowInner({
   nodes,
   edges,
+  readOnly = false,
   selectedId,
   onNodeClick,
   onNodeDoubleClick,
@@ -132,7 +156,32 @@ function WorkflowFlowInner({
 }: WorkflowFlowProps) {
   const [internalSel, setInternalSel] = useState<string | null>(null);
   const controlled = selectedId !== undefined;
-  const sel = controlled ? selectedId : internalSel;
+  const sel = controlled ? selectedId : readOnly ? null : internalSel;
+  const graphId = useId();
+  const navigationId = useId();
+  const flowRef = useRef<HTMLDivElement>(null);
+  if (
+    internalSel !== null &&
+    (readOnly || controlled || !nodes.some((node) => node.id === internalSel))
+  ) {
+    setInternalSel(null);
+  }
+
+  useEffect(() => {
+    const element = flowRef.current;
+    if (!element) return;
+    // React Flow overwrites the role prop, so synchronize its DOM role here.
+    element.setAttribute('role', readOnly ? 'region' : 'application');
+    const active = element.ownerDocument.activeElement;
+    if (
+      readOnly &&
+      active instanceof HTMLElement &&
+      (active.classList.contains('react-flow__node') ||
+        active.classList.contains('react-flow__edge'))
+    ) {
+      element.focus();
+    }
+  }, [readOnly]);
 
   // An explicit `layoutOptions.direction` wins over the `verticalRender`
   // convenience boolean. Derive a single direction so the dagre ranks and the
@@ -151,7 +200,7 @@ function WorkflowFlowInner({
   );
   const flatById = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
 
-  const rfNodes = useMemo<Node[]>(
+  const rfNodes = useMemo<WorkflowNode[]>(
     () =>
       nodes.map((n) => {
         const color =
@@ -161,10 +210,25 @@ function WorkflowFlowInner({
           type: 'nwf',
           position: positions[n.id] ?? { x: 0, y: 0 },
           selected: n.id === sel,
-          data: { flat: n, color, state: nodeState?.[n.id], renderNode, vertical } as NodeData,
+          draggable: !readOnly,
+          connectable: !readOnly,
+          selectable: !readOnly,
+          deletable: !readOnly,
+          focusable: !readOnly,
+          ariaLabel: [
+            n.fullLabel ?? n.label,
+            n.phase,
+            n.agentType,
+            n.model,
+            n.badge,
+            nodeState?.[n.id],
+          ]
+            .filter(Boolean)
+            .join(', '),
+          data: { flat: n, color, state: nodeState?.[n.id], renderNode, vertical },
         };
       }),
-    [nodes, positions, sel, renderNode, phaseColors, nodeState, vertical],
+    [nodes, positions, sel, renderNode, phaseColors, nodeState, vertical, readOnly],
   );
 
   const rfEdges = useMemo<Edge[]>(
@@ -175,33 +239,41 @@ function WorkflowFlowInner({
         target: e.target,
         type: 'smoothstep',
         animated: e.kind === 'loop',
+        selectable: !readOnly,
+        deletable: !readOnly,
+        focusable: !readOnly,
+        reconnectable: !readOnly,
+        ariaLabel: `${flatById.get(e.source)?.fullLabel ?? flatById.get(e.source)?.label ?? e.source} (${e.source}) to ${flatById.get(e.target)?.fullLabel ?? flatById.get(e.target)?.label ?? e.target} (${e.target}), ${e.kind}`,
         style: edgeStyle?.(e) ?? defaultEdgeStyle(e.kind),
       })),
-    [edges, edgeStyle],
+    [edges, edgeStyle, flatById, readOnly],
   );
 
   const handleClick = useCallback<NodeMouseHandler>(
     (event, node) => {
+      if (readOnly) return;
       const flat = flatById.get(node.id);
       if (!flat) return;
       if (!controlled) setInternalSel(node.id);
-      onNodeClick?.(flat, event as unknown as MouseEvent);
+      onNodeClick?.(flat, event);
     },
-    [flatById, controlled, onNodeClick],
+    [flatById, controlled, onNodeClick, readOnly],
   );
 
   const handleDoubleClick = useCallback<NodeMouseHandler>(
     (event, node) => {
+      if (readOnly) return;
       const flat = flatById.get(node.id);
-      if (flat) onNodeDoubleClick?.(flat, event as unknown as MouseEvent);
+      if (flat) onNodeDoubleClick?.(flat, event);
     },
-    [flatById, onNodeDoubleClick],
+    [flatById, onNodeDoubleClick, readOnly],
   );
 
   const wrapperClass = [
     'nwf-graph',
     theme === 'dark' ? 'nwf-theme-dark' : '',
     vertical ? 'nwf-vertical' : '',
+    readOnly ? 'nwf-readonly' : '',
     className ?? '',
   ]
     .filter(Boolean)
@@ -210,16 +282,53 @@ function WorkflowFlowInner({
   return (
     <div className={wrapperClass} style={{ width: '100%', height: '100%', ...style }}>
       <ReactFlow
+        ref={flowRef}
+        id={graphId}
+        aria-label="Workflow graph"
+        aria-describedby={readOnly ? navigationId : undefined}
+        tabIndex={-1}
         nodes={rfNodes}
         edges={rfEdges}
         nodeTypes={nodeTypes}
         onNodeClick={handleClick}
         onNodeDoubleClick={handleDoubleClick}
         fitView={fitView}
+        minZoom={MIN_ZOOM}
+        maxZoom={MAX_ZOOM}
+        nodesDraggable={!readOnly}
+        nodesConnectable={!readOnly}
+        nodesFocusable={!readOnly}
+        edgesFocusable={!readOnly}
+        edgesReconnectable={!readOnly}
+        elementsSelectable={!readOnly}
+        deleteKeyCode={readOnly ? null : 'Backspace'}
+        selectionKeyCode={readOnly ? null : 'Shift'}
+        multiSelectionKeyCode={readOnly ? null : undefined}
+        disableKeyboardA11y={readOnly}
+        connectOnClick={!readOnly}
+        ariaLabelConfig={
+          readOnly
+            ? {
+                'node.a11yDescription.default': '',
+                'node.a11yDescription.keyboardDisabled': '',
+                'edge.a11yDescription.default': '',
+              }
+            : undefined
+        }
         proOptions={{ hideAttribution: true }}
       >
         {children ?? <Background />}
+        {readOnly ? <ViewportControls empty={nodes.length === 0} /> : null}
       </ReactFlow>
+      {readOnly ? (
+        <>
+          <p id={navigationId} className="nwf-navigation-hint">
+            Read-only workflow. Use the pan, zoom, and fit buttons to explore the graph, or expand
+            Workflow details to read nodes and connections.
+          </p>
+          <WorkflowDetails nodes={nodes} edges={edges} />
+        </>
+      ) : null}
     </div>
   );
 }

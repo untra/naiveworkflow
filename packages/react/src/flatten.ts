@@ -20,6 +20,7 @@ export interface FlatNode {
   id: string;
   kind: FlatNodeKind;
   label: string;
+  fullLabel?: string;
   phase?: string;
   phaseIndex?: number;
   prompt?: string;
@@ -112,7 +113,8 @@ export function flattenIR(graph: IRGraph, meta?: Meta | null): FlatGraph {
     badge?: string,
   ): Frontier => {
     const tag = phase ?? node.phase;
-    const flat: FlatNode = { id: node.id, kind, label: truncate(leafLabel(node)) };
+    const fullLabel = leafLabel(node);
+    const flat: FlatNode = { id: node.id, kind, label: truncate(fullLabel), fullLabel };
     if (tag) {
       flat.phase = tag;
       flat.phaseIndex = phaseIndexOf(tag);

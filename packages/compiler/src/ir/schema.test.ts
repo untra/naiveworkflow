@@ -1,3 +1,4 @@
+import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
 import { irJsonSchema } from './json-schema.js';
 import { irGraphSchema, irNodeSchema, metaSchema } from './schema.js';
@@ -73,5 +74,32 @@ describe('irJsonSchema', () => {
   it('exports a JSON Schema object', () => {
     const js = irJsonSchema() as Record<string, unknown>;
     expect(js).toHaveProperty('$schema');
+  });
+
+  it('validates recursive IR using draft-07 and agrees with runtime parsing', () => {
+    const validate = new Ajv().compile(irJsonSchema());
+    const graph = {
+      root: {
+        id: 'r',
+        kind: 'loop',
+        repeat: { kind: 'until', conditionText: 'done' },
+        body: { id: 'p', kind: 'parallel', children: [{ id: 'a', kind: 'agent', prompt: null }] },
+      },
+    };
+    expect(validate(graph)).toBe(true);
+    expect(irGraphSchema.parse(graph)).toEqual(graph);
+    expect(validate({ root: { id: 'a', kind: 'agent' } })).toBe(false);
+    expect(validate({ root: { id: 'x', kind: 'unknown' } })).toBe(false);
+  });
+
+  it('strips unknown keys without changing optional and nullable fields', () => {
+    expect(irNodeSchema.parse({ id: 'a', kind: 'agent', prompt: null, extra: true })).toEqual({
+      id: 'a',
+      kind: 'agent',
+      prompt: null,
+    });
+    expect(
+      irNodeSchema.safeParse({ id: 'a', kind: 'agent', prompt: null, label: null }).success,
+    ).toBe(false);
   });
 });

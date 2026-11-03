@@ -39,7 +39,7 @@ export function DefaultNodeBody({ flat, selected, color, state }: DefaultNodeBod
     <div
       className={className}
       style={color ? ({ '--nwf-phase-color': color } as CSSProperties) : undefined}
-      title={flat.label}
+      title={flat.fullLabel ?? flat.label}
     >
       {flat.phase ? <div className="nwf-node-phase">{flat.phase}</div> : null}
       <div className="nwf-node-label">{flat.label}</div>

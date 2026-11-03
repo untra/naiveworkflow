@@ -16,7 +16,9 @@
 
 /* ─── Tokens: light preset (the base) ─────────────────────────────────────── */
 .nwf-graph {
-  --nwf-accent: #6ea8fe;
+  --nwf-accent: #2457a7;
+  --nwf-focus: #2457a7;
+  --nwf-phase-default: #6ea8fe;
   --nwf-node-bg: #ffffff;
   --nwf-node-fg: #18181b;
   --nwf-node-border: #d4d4d8;
@@ -27,7 +29,7 @@
      saturated phase palette in either theme. */
   --nwf-chip-fg: #0a0c11;
   --nwf-canvas-bg: #ffffff;
-  --nwf-edge: #c4c4cc;
+  --nwf-edge: #686875;
   --nwf-edge-active: var(--nwf-accent);
   --nwf-ok: #16a34a;
   --nwf-workflow: #c98bdb;
@@ -38,11 +40,16 @@
 
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
 }
 
 /* ─── Tokens: dark preset ─────────────────────────────────────────────────── */
 .nwf-graph.nwf-theme-dark {
   --nwf-accent: #6ea8fe;
+  --nwf-focus: #9fc4ff;
   --nwf-node-bg: #181b27;
   --nwf-node-fg: #e6e9f2;
   --nwf-node-border: #343b50;
@@ -51,7 +58,7 @@
   --nwf-badge-fg: #9aa3b8;
   --nwf-chip-fg: #0a0c11;
   --nwf-canvas-bg: #0a0c11;
-  --nwf-edge: #343b50;
+  --nwf-edge: #8c96ad;
   --nwf-edge-active: #6ea8fe;
   --nwf-ok: #5fd0a8;
   --nwf-workflow: #c98bdb;
@@ -60,7 +67,7 @@
 
 /* ─── Node ────────────────────────────────────────────────────────────────── */
 .nwf-node {
-  --nwf-phase-color: var(--nwf-accent);
+  --nwf-phase-color: var(--nwf-phase-default);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -144,17 +151,16 @@
 
 /* ─── Selection ───────────────────────────────────────────────────────────── */
 .nwf-node.nwf-selected {
-  border-color: var(--nwf-phase-color);
+  border-color: var(--nwf-focus);
   box-shadow:
-    0 0 0 2px var(--nwf-phase-color),
+    0 0 0 2px var(--nwf-focus),
     0 0 24px color-mix(in srgb, var(--nwf-phase-color) 45%, transparent);
 }
 
 /* ─── Optional consumer-driven states (no built-in simulation) ────────────────
    Drive these by passing a `nodeState` map; the component only applies classes. */
 .nwf-node.nwf-idle {
-  opacity: 0.66;
-  filter: saturate(0.85);
+  border-style: dashed;
 }
 
 .nwf-node.nwf-running {
@@ -193,6 +199,96 @@
   background: var(--nwf-canvas-bg);
 }
 
+.nwf-graph > .react-flow {
+  flex: 1;
+  min-height: 160px;
+}
+
+.nwf-custom-node {
+  pointer-events: auto;
+}
+
+.nwf-graph .react-flow__node:focus,
+.nwf-graph .react-flow__node:focus-visible,
+.nwf-graph .react-flow__edge:focus,
+.nwf-graph .react-flow__edge:focus-visible,
+.nwf-graph button:focus-visible,
+.nwf-graph summary:focus-visible,
+.nwf-graph .react-flow:focus-visible {
+  outline: 3px solid var(--nwf-focus);
+  outline-offset: 4px;
+}
+
+.nwf-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: calc(100% - 32px);
+  padding: 6px;
+  background: var(--nwf-node-bg);
+  border: 1px solid var(--nwf-edge);
+  border-radius: var(--nwf-radius);
+}
+
+.nwf-graph button {
+  color: var(--nwf-node-fg);
+  background: var(--nwf-node-bg);
+  border: 1px solid var(--nwf-edge);
+  border-radius: 4px;
+  min-width: 28px;
+  min-height: 28px;
+  font: inherit;
+}
+
+.nwf-graph button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.nwf-graph .react-flow__controls button svg {
+  fill: currentColor;
+}
+
+.nwf-details,
+.nwf-navigation-hint {
+  color: var(--nwf-node-fg);
+  background: var(--nwf-node-bg);
+  font-family: var(--nwf-font);
+  font-size: 0.875rem;
+  padding: 8px;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.nwf-details {
+  max-height: 40%;
+  overflow: auto;
+}
+.nwf-details summary {
+  cursor: pointer;
+  min-height: 28px;
+}
+.nwf-details dd {
+  margin-inline-start: 16px;
+  white-space: pre-wrap;
+}
+.nwf-details dt {
+  font-weight: 600;
+}
+.nwf-details li {
+  margin-block: 8px;
+}
+.nwf-details h2 {
+  font-size: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nwf-graph .nwf-node,
+  .nwf-graph .react-flow__edge.animated path {
+    animation: none;
+    transition: none;
+  }
+}
+
 .nwf-graph .react-flow__edge-path {
   stroke: var(--nwf-edge);
   stroke-width: 1.5;
@@ -208,4 +304,10 @@
   height: 7px;
   background: var(--nwf-edge);
   border: 1px solid var(--nwf-canvas-bg);
+}
+
+.nwf-graph .react-flow__edge:focus-visible .react-flow__edge-path {
+  stroke: var(--nwf-focus);
+  stroke-width: 4;
+  stroke-dasharray: 6 3;
 }

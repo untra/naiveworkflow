@@ -19,11 +19,11 @@ acorn (parse) → visitor (→ IR) → elkjs (layout) → React Flow (render)
 
 ## Packages
 
-| Package | Description |
-|---|---|
-| [`@untra/naiveworkflow-compiler`](packages/compiler) | JS source → IR JSON. Headless, no React. |
-| [`@untra/naiveworkflow-react`](packages/react) | IR → laid-out directed graph diagram. |
-| [`apps/playground`](apps/playground) | Vite dev app: paste JS, see the diagram. (private) |
+| Package                                              | Description                                        |
+| ---------------------------------------------------- | -------------------------------------------------- |
+| [`@untra/naiveworkflow-compiler`](packages/compiler) | JS source → IR JSON. Headless, no React.           |
+| [`@untra/naiveworkflow-react`](packages/react)       | IR → laid-out directed graph diagram.              |
+| [`apps/playground`](apps/playground)                 | Vite dev app: paste JS, see the diagram. (private) |
 
 ## Lane semantics
 

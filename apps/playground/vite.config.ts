@@ -6,6 +6,9 @@ const fromHere = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
 export default defineConfig(({ command }) => ({
   plugins: [react()],
+  build: {
+    rollupOptions: { input: { main: fromHere('index.html'), audit: fromHere('audit.html') } },
+  },
   server: { port: 5180 },
   resolve: {
     // Single instance of React / React Flow when bundling package source directly.
