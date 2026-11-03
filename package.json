@@ -1,6 +1,6 @@
 {
   "name": "naiveworkflow-monorepo",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "description": "Visualize Claude workflow scripts as diagramed directed graphs.",
   "license": "MIT",
@@ -22,13 +22,13 @@
     "audit": "pnpm audit --audit-level low"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
     "@biomejs/biome": "^2.6.4",
+    "@playwright/test": "^1.56.1",
+    "ajv": "^8.17.1",
     "typescript": "^7.0.2",
     "vite": "^8.1.6",
-    "vitest": "^4.1.12",
-    "@playwright/test": "^1.56.1",
-    "@axe-core/playwright": "^4.11.0",
-    "ajv": "^8.17.1"
+    "vitest": "^4.1.12"
   },
   "pnpm": {
     "overrides": {
